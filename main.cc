@@ -22,7 +22,7 @@
 #include "entry.hh"
 #include "file.hh"
 
-#define error(msg) std::cerr << msg << '\n';
+#define error(msg) std::cerr << "error: " << msg << '\n';
 
 #define run_func(cmd,func,expected,expected2) \
   if (tokens[0] == cmd) \
@@ -184,10 +184,13 @@ remove ()
     }
 }
 
+/* Save the list to default.td, which must already exist.
+ * TODO: Add saving to files with custom names.  */
 void
 save ()
 {
-
+  if (save_list(&root))
+    error("there was an error saving");
 }
 
 /* Checks to see if issued command exists, and, if it does, runs it.  */

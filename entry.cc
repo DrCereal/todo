@@ -24,6 +24,7 @@ entry::entry (const std::string& task)
 {
   this->z_ = 0;
   this->task_ = task;
+  this->parent_ = NULL;
 }
 
 /* Needed for the new operator.  */
@@ -31,6 +32,7 @@ entry::entry ()
 {
   this->z_ = 0;
   this->task_ = "";
+  this->parent_ = NULL;
 }
 
 /* Draw the entry (and it's children if the argument is true) to the

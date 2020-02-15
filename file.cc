@@ -20,18 +20,47 @@
 
 #include "file.hh"
 
+std::ofstream out;
+
+/* Write the entry to file (and it's children.)
+ * The index bit is kind of hacky.  */
+static void
+write_entry(entry* e, std::string& parent_index, std::string& index)
+{
+  std::string new_index;
+ 
+  /* Checked so we don't write root to file.  */
+  if (e->get_parent() != NULL)
+    out << "add " << e->get_task() << ' ' << parent_index << '\n';
+
+  const int size = e->get_number_of_entries();
+  for (int i = 0; i < size; i++)
+    {
+      new_index = index;
+      if (new_index != "")
+        new_index += '.';
+      new_index += std::to_string(i + 1);
+
+      write_entry(e->get_entry(i), index, new_index);
+    }
+}
+
 int 
 save_list (entry* root)
 {
-  std::ofstream out;
-  out.open("~/Documents/default.td", std::ofstream::out);
+  out.open("default.td", std::ofstream::out);
 
   std::ios_base::iostate status = out.rdstate();
   if (status & std::ofstream::failbit)
     return -1;
   else
     {
-      /* TODO: Write to file.  */
+      std::string parent_index = "";
+      std::string index = "";
+      write_entry(root, parent_index, index);
+
+      /* For convenient viewing after loading in a list.  */
+      out << "list\n";
 
       out.close();
     }
